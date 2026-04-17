@@ -5,6 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-utils.url = "github:numtide/flake-utils";
+    shnix.url = "github:lane-core/sh.nix";
   };
 
   outputs =
@@ -13,13 +14,55 @@
       nixpkgs,
       flake-parts,
       flake-utils,
+      shnix,
     }:
     flake-parts.lib.mkFlake { inherit inputs; } {
-      flake = {
-        overlays.default = final: prev: {
-          ksh = final.callPackage ./packages/stable.nix { };
+      flake =
+        let
+          kshModules = shnix.lib.mkPosixShellModule {
+            name = "ksh";
+            # Default to pkgs.ksh (resolved via overlay at evaluation time).
+            package = "ksh";
+
+            initFiles = {
+              profile = {
+                nixos = {
+                  etcName = "profile";
+                };
+                homeManager = {
+                  homePath = ".profile";
+                };
+                darwin = {
+                  etcName = "profile";
+                };
+                when = "login";
+                envVar = null;
+              };
+              rc = {
+                nixos = {
+                  etcName = "kshrc";
+                };
+                homeManager = {
+                  homePath = ".kshrc";
+                };
+                darwin = {
+                  etcName = "kshrc";
+                };
+                when = "interactive";
+                envVar = "ENV";
+              };
+            };
+          };
+        in
+        {
+          overlays.default = final: prev: {
+            ksh = final.callPackage ./packages/stable.nix { };
+          };
+
+          nixosModules.ksh = kshModules.nixosModule;
+          homeManagerModules.ksh = kshModules.homeManagerModule;
+          darwinModules.ksh = kshModules.darwinModule;
         };
-      };
 
       systems = flake-utils.lib.defaultSystems;
 
