@@ -26,17 +26,17 @@
 
             initFiles = {
               profile = {
-                # Don't write /etc/profile on NixOS — bash already manages it.
+                # Don't write /etc/profile on NixOS or nix-darwin —
+                # bash (NixOS) and Apple (Darwin) already manage it.
                 nixos = null;
                 homeManager = {
                   homePath = ".profile";
                 };
-                darwin = {
-                  etcName = "profile";
-                };
+                darwin = null;
                 when = "login";
                 envVar = null;
               };
+
               rc = {
                 nixos = {
                   etcName = "kshrc";
@@ -49,6 +49,51 @@
                 };
                 when = "interactive";
                 envVar = "ENV";
+              };
+            };
+
+            # ksh93-specific programmable options.
+            programmableOptions = {
+              shellOptions = {
+                type = with nixpkgs.lib.types; listOf str;
+                default = [ ];
+                description = "Shell options to enable via set -o";
+                target = "interactiveShellInit";
+                generator = opts: nixpkgs.lib.concatMapStringsSep "\n" (o: "set -o ${o}") opts;
+              };
+
+              functionsDir = {
+                type = nixpkgs.lib.types.nullOr nixpkgs.lib.types.str;
+                default = null;
+                description = "Directory for autoload functions (sets FPATH)";
+                target = "interactiveShellInit";
+                generator = dir: ''
+                  export FPATH="${dir}:''${FPATH:-/usr/share/ksh/functions}"
+                '';
+              };
+
+              histfile = {
+                type = nixpkgs.lib.types.nullOr nixpkgs.lib.types.str;
+                default = null;
+                description = "Path to the ksh history file";
+                target = "interactiveShellInit";
+                generator = path: ''HISTFILE="${path}"'';
+              };
+
+              histsize = {
+                type = nixpkgs.lib.types.int;
+                default = 10000;
+                description = "Number of history entries to keep";
+                target = "interactiveShellInit";
+                generator = n: "HISTSIZE=${toString n}";
+              };
+
+              initExtra = {
+                type = nixpkgs.lib.types.lines;
+                default = "";
+                description = "Extra shell commands for interactive initialisation";
+                target = "interactiveShellInit";
+                generator = nixpkgs.lib.id;
               };
             };
           };
