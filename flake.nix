@@ -26,27 +26,15 @@
 
             initFiles = {
               profile = {
-                # Don't write /etc/profile on NixOS or nix-darwin —
-                # bash (NixOS) and Apple (Darwin) already manage it.
-                nixos = null;
-                homeManager = {
-                  homePath = ".profile";
-                };
-                darwin = null;
+                etcName = "profile";
+                homePath = ".profile";
                 when = "login";
                 envVar = null;
               };
 
               rc = {
-                nixos = {
-                  etcName = "kshrc";
-                };
-                homeManager = {
-                  homePath = ".kshrc";
-                };
-                darwin = {
-                  etcName = "kshrc";
-                };
+                etcName = "kshrc";
+                homePath = ".kshrc";
                 when = "interactive";
                 envVar = "ENV";
               };
