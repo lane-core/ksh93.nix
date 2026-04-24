@@ -19,15 +19,25 @@ jobs:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
 
+      - name: fetch latest dev commit info
+        id: dev
+        run: |
+          commit_json=$(curl -fsSL https://api.github.com/repos/ksh93/ksh/commits/dev)
+          sha=$(echo "$commit_json" | jq -r '.sha')
+          date=$(echo "$commit_json" | jq -r '.commit.committer.date' | cut -dT -f1)
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          echo "date=$date" >> "$GITHUB_OUTPUT"
+
       - name: prefetch latest dev
         id: prefetch
         run: |
-          hash=$(nix-prefetch-git --url https://github.com/ksh93/ksh --rev dev | jq -r '.hash')
+          hash=$(nix-prefetch-git --url https://github.com/ksh93/ksh --rev "${{ steps.dev.outputs.sha }}" | jq -r '.hash')
           echo "hash=$hash" >> "$GITHUB_OUTPUT"
 
-      - name: update nightly hash
+      - name: update nightly version and hash
         run: |
-          sed -i "s|hash = \"sha256-[^\"]*\";|hash = \"${{ steps.prefetch.outputs.hash }}\";|" packages/nightly.nix
+          sed -i 's|version = "[^"]*";|version = "unstable-${{ steps.dev.outputs.date }}";|' packages/nightly.nix
+          sed -i 's|hash = "sha256-[^"]*";|hash = "${{ steps.prefetch.outputs.hash }}";|' packages/nightly.nix
 
       - name: commit if changed
         run: |
@@ -38,5 +48,5 @@ jobs:
             exit 0
           fi
           git add packages/nightly.nix
-          git commit -m "ksh-nightly: update dev branch hash to ${{ steps.prefetch.outputs.hash }}"
+          git commit -m "ksh-nightly: update to unstable-${{ steps.dev.outputs.date }} (${{ steps.prefetch.outputs.hash }})"
           git push
