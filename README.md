@@ -202,25 +202,11 @@ The module extends the POSIX shell base from [sh.nix](https://github.com/lane-co
 | `programs.ksh.interactiveShellInit` | `lines` | `""` | Run for interactive shells |
 | `programs.ksh.promptInit` | `lines` | `""` | Prompt configuration |
 | `programs.ksh.logoutExtra` | `lines` | `""` | Run on logout |
-| `programs.ksh.histfile` | `nullOr str` | `"${HOME}/.ksh_history"` | History file path |
+| `programs.ksh.histfile` | `nullOr str` | `null` | History file path |
 | `programs.ksh.histsize` | `int` | `10000` | Number of history entries |
-
----
-
-## Shell integration for other tools
-
-Other home-manager modules can integrate with ksh via `home.shell.enableKshIntegration`:
-
-```nix
-{ config, ... }: {
-  programs.direnv = {
-    enable = true;
-    enableKshIntegration = true;  # adds direnv hook to ksh
-  };
-}
-```
-
-This follows the same pattern as `enableBashIntegration`, `enableZshIntegration`, and `enableFishIntegration`.
+| `programs.ksh.shellOptions` | `listOf str` | `[]` | Shell options to enable via `set -o` |
+| `programs.ksh.functionsDir` | `nullOr str` | `null` | Directory for autoload functions (sets `FPATH`) |
+| `programs.ksh.initExtra` | `lines` | `""` | Extra shell commands for interactive initialisation |
 
 ---
 
