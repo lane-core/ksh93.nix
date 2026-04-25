@@ -65,7 +65,7 @@
                 default = null;
                 description = "Path to the ksh history file";
                 target = "interactiveShellInit";
-                generator = path: ''HISTFILE="${path}"'';
+                generator = path: ''HISTFILE="${path}"'' + "\n";
               };
 
               histsize = {
@@ -73,7 +73,7 @@
                 default = 10000;
                 description = "Number of history entries to keep";
                 target = "interactiveShellInit";
-                generator = n: "HISTSIZE=${toString n}";
+                generator = n: "HISTSIZE=${toString n}\n";
               };
 
               initExtra = {
