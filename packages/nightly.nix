@@ -14,7 +14,7 @@ stdenv.mkDerivation {
     owner = "ksh93";
     repo = "ksh";
     rev = "dev";
-    hash = "sha256-q4Ymq5IIHoo2J9M5qZwWg9Or6TQUlV/oCJqVpk1O838=";
+    hash = "";
   };
 
   nativeBuildInputs = [
