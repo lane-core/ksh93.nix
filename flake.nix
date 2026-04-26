@@ -50,31 +50,64 @@
                 # ksh93 defaults: larger history than the generic POSIX default.
                 histSize = lib.mkDefault 10000;
 
-                initExtra = lib.mkIf cfg.enable (lib.mkAfter ''
-                  ${lib.concatMapStringsSep "\n" (o: "set -o ${o}") cfg.shellOptions}
-                  ${lib.optionalString (cfg.functionsDir != null) ''
-                    export FPATH="${cfg.functionsDir}:''${FPATH:-/usr/share/ksh/functions}"
-                  ''}
-                '');
+                initExtra = lib.mkIf cfg.enable (
+                  lib.mkAfter ''
+                    ${lib.concatMapStringsSep "\n" (o: "set -o ${o}") cfg.shellOptions}
+                    ${lib.optionalString (cfg.functionsDir != null) ''
+                      export FPATH="${cfg.functionsDir}:''${FPATH:-/usr/share/ksh/functions}"
+                    ''}
+                  ''
+                );
               };
             };
         in
         {
           overlays.default = final: prev: {
             ksh = final.callPackage ./packages/stable.nix { };
+            ksh-nightly = final.callPackage ./packages/nightly.nix { };
           };
 
-          nixosModules.ksh = { config, lib, pkgs, ... }: {
-            imports = [ base.nixosModule kshOptions ];
-          };
+          nixosModules.ksh =
+            {
+              config,
+              lib,
+              pkgs,
+              ...
+            }:
+            {
+              imports = [
+                base.nixosModule
+                kshOptions
+              ];
+            };
 
-          darwinModules.ksh = { config, lib, pkgs, ... }: {
-            imports = [ base.darwinModule kshOptions ];
-          };
+          darwinModules.ksh =
+            {
+              config,
+              lib,
+              pkgs,
+              ...
+            }:
+            {
+              imports = [
+                base.darwinModule
+                kshOptions
+              ];
+            };
 
-          homeManagerModules.ksh = { config, lib, pkgs, ... }: {
-            imports = [ base.homeManagerModule kshOptions ];
-          };
+          homeManagerModules.ksh =
+            {
+              config,
+              lib,
+              pkgs,
+              ...
+            }:
+            {
+              imports = [
+                base.homeManagerModule
+                kshOptions
+              ];
+            };
         };
 
       systems = flake-utils.lib.defaultSystems;
