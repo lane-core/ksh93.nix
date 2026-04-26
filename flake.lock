@@ -96,11 +96,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1777194030,
-        "narHash": "sha256-hKbIll7WJDE+O14rxfUk3SeQAYv0yn3oryyjxKvFy/o=",
+        "lastModified": 1777196057,
+        "narHash": "sha256-QeHrt42zOPG/FQti8/wlSH9cKtr0tq+KgkAbR5mNS0w=",
         "owner": "lane-core",
         "repo": "sh.nix",
-        "rev": "27bd9b2babd05cce3904678f22217db616eb9645",
+        "rev": "02f89285dab9f08e0b7e78e7cbc8b1122ee85a6d",
         "type": "github"
       },
       "original": {
