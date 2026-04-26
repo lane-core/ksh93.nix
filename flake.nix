@@ -40,7 +40,7 @@
                 };
 
                 functionsDir = lib.mkOption {
-                  type = lib.types.nullOr lib.types.path;
+                  type = lib.types.nullOr lib.types.str;
                   default = null;
                   description = "Directory for autoload functions (sets FPATH).";
                 };
