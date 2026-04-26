@@ -40,7 +40,7 @@
                 };
 
                 functionsDir = lib.mkOption {
-                  type = lib.types.nullOr lib.types.str;
+                  type = lib.types.nullOr lib.types.path;
                   default = null;
                   description = "Directory for autoload functions (sets FPATH).";
                 };
@@ -54,7 +54,7 @@
                   lib.mkAfter ''
                     ${lib.concatMapStringsSep "\n" (o: "set -o ${o}") cfg.shellOptions}
                     ${lib.optionalString (cfg.functionsDir != null) ''
-                      export FPATH="${cfg.functionsDir}:''${FPATH:-/usr/share/ksh/functions}"
+                      export FPATH=${cfg.functionsDir}:''${FPATH:-/usr/share/ksh/functions}
                     ''}
                   ''
                 );
