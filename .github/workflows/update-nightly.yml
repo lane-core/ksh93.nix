@@ -37,7 +37,7 @@ jobs:
       - name: update nightly version and hash
         run: |
           sed -i 's|version = "[^"]*";|version = "unstable-${{ steps.dev.outputs.date }}";|' packages/nightly.nix
-          sed -i 's|hash = "sha256-[^"]*";|hash = "${{ steps.prefetch.outputs.hash }}";|' packages/nightly.nix
+          sed -i 's|hash = "[^"]*";|hash = "${{ steps.prefetch.outputs.hash }}";|' packages/nightly.nix
 
       - name: commit if changed
         run: |
