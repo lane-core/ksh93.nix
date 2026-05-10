@@ -8,7 +8,7 @@
 
 stdenv.mkDerivation {
   pname = "ksh";
-  version = "unstable-2026-05-06";
+  version = "unstable-2026-05-08";
 
   src = fetchFromGitHub {
     owner = "ksh93";
