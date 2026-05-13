@@ -1,6 +1,12 @@
 # ksh93.nix
 
-[ksh93u+m](https://github.com/ksh93/ksh) — the actively maintained KornShell fork — packaged for Nix, with first-class NixOS / nix-darwin / home-manager module support via [sh.nix](https://github.com/lane-core/sh.nix).
+## DEPRECIATED
+
+This project has been superseded by [sh.nix](https://github.com/biocini/sh.nix).
+
+---
+
+[ksh93u+m](https://github.com/ksh93/ksh) — the actively maintained KornShell fork — packaged for Nix, with first-class NixOS / nix-darwin / home-manager module support via [sh.nix](https://github.com/biocini/sh.nix).
 
 ## Quick start
 
